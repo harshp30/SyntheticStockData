@@ -13,8 +13,7 @@ from plotly.subplots import make_subplots
 import plotly.express as px
 from datetime import datetime, timedelta
 import warnings
-
-# Configuration is now handled directly in the code
+from config import VALIDATION_CONFIG
 
 # Set plotting style
 plt.style.use('seaborn-v0_8')

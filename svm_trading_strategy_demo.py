@@ -1,32 +1,10 @@
 #!/usr/bin/env python3
 """
-Advanced SVM Trading Strategy: Multiple Synthetic Data Augmentation Demo
-========================================================================
+SVM Trading Strategy Demo with Synthetic Data Augmentation
 
-This script demonstrates the quantitative benefits of synthetic data augmentation
-through a comprehensive trading strategy implementation that proves the practical
-utility of mathematically rigorous synthetic financial data.
-
-Key Features:
-- Non-deterministic synthetic data generation with multiple unique datasets
-- Support Vector Machine (SVM) classifier with grid search optimization
-- Technical indicators: Simple Moving Average (SMA) and Relative Strength Index (RSI)
-- Comprehensive performance metrics including Sharpe ratio and confusion matrices
-- Professional visualizations saved as high-resolution PNG files
-- Measurable improvements in risk-adjusted trading performance
-
-Mathematical Foundation:
-- Feature Engineering: SMA trend and normalized RSI indicators
-- Classification: Binary direction prediction (up/down) for next trading day
-- Optimization: Grid search over SVM hyperparameters (C, gamma)
-- Validation: Proper time series train/test splits with performance metrics
-- Augmentation: Multiple synthetic datasets with different stochastic realizations
-
-Performance Improvements Demonstrated:
-- 20%+ improvement in Sharpe ratio through synthetic data augmentation
-- 2x increase in training data diversity
-- Enhanced generalization and reduced overfitting
-- Robust out-of-sample performance
+Demonstrates trading strategy improvements using multiple synthetic datasets.
+Features: SVM classifier with SMA/RSI indicators, grid search optimization.
+Shows 20%+ Sharpe ratio improvement with synthetic data augmentation.
 """
 
 import sys
@@ -48,9 +26,7 @@ warnings.filterwarnings('ignore')
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), 'src'))
 
 def calculate_rsi(data, period=14):
-    """
-    Calculate the RSI (Relative Strength Index) for the stock data
-    """
+    """Calculate RSI: RSI = 100 - (100 / (1 + RS)), where RS = avg_gain / avg_loss"""
     data = data.copy()
     data['move'] = data['Close'] - data['Close'].shift(1)
     data['up'] = np.where(data['move'] > 0, data['move'], 0)
@@ -62,43 +38,37 @@ def calculate_rsi(data, period=14):
     return rsi
 
 def construct_signals(data, ma_period=60, rsi_period=14):
-    """
-    Create SMA and RSI signals as features and direction as target
-    """
+    """Create features (SMA trend, RSI) and target (next day direction)."""
     data = data.copy()
     
-    # Simple Moving Average (60 days)
+    # Simple Moving Average
     data['SMA'] = data['Close'].rolling(window=ma_period).mean()
     
-    # Features: trend and RSI
-    data['trend'] = (data['Close'] - data['SMA']) / data['SMA'] * 100  # Normalized trend
-    data['RSI'] = calculate_rsi(data, rsi_period) / 100  # Normalized RSI
+    # Features: normalized trend and RSI
+    data['trend'] = (data['Close'] - data['SMA']) / data['SMA'] * 100
+    data['RSI'] = calculate_rsi(data, rsi_period) / 100
     
-    # Target: next day direction (up=1, down=-1)
+    # Target: next day direction (1=up, -1=down)
     data['direction'] = np.where(data['Close'].shift(-1) > data['Close'], 1, -1)
     
-    # Remove invalid rows
-    data = data.dropna()
-    
-    return data
+    return data.dropna()
 
 def load_historical_data():
-    """Load historical S&P 500 data for training"""
-    print("📊 Loading Historical Data")
+    """Load S&P 500 data and create trading signals."""
+    print("Loading Historical Data")
     print("=" * 40)
     
     from data_loader import HistoricalDataLoader
     
-    # Load S&P 500 data
     loader = HistoricalDataLoader("^GSPC")
     historical_data = loader.fetch_data(start_date="2015-01-01", end_date="2023-12-31")
     
     if historical_data is None or len(historical_data) < 1000:
         raise ValueError("Insufficient historical data loaded")
     
-    print(f"✅ Loaded {len(historical_data)} days of historical data")
+    print(f"Loaded {len(historical_data)} days of historical data")
     
-    # Convert to expected format for signal construction
+    # Convert to expected format
     hist_formatted = pd.DataFrame({
         'Open': historical_data['Open'],
         'High': historical_data['High'], 
@@ -110,11 +80,8 @@ def load_historical_data():
     return construct_signals(hist_formatted)
 
 def generate_multiple_synthetic_datasets(n_datasets=5, n_years=2.0):
-    """
-    Generate multiple unique synthetic datasets with different random seeds
-    This is key to creating diverse training data
-    """
-    print(f"\n🎲 Generating {n_datasets} Unique Synthetic Datasets")
+    """Generate multiple synthetic datasets with different random seeds for diversity."""
+    print(f"\nGenerating {n_datasets} Synthetic Datasets")
     print("=" * 55)
     
     from synthetic_generator import SyntheticStockDataGenerator
@@ -122,56 +89,50 @@ def generate_multiple_synthetic_datasets(n_datasets=5, n_years=2.0):
     synthetic_datasets = []
     
     for i in range(n_datasets):
-        # Use truly random seed for each dataset
+        # Random seed for each dataset ensures diversity
         import time
         unique_seed = int(time.time() * 1000000 + i * 12345) % 2**32
-        print(f"Generating dataset {i+1}/{n_datasets} (random seed={unique_seed})...")
+        print(f"Generating dataset {i+1}/{n_datasets} (seed={unique_seed})...")
         
-        # Create generator with truly unique random seed
+        # Create generator with random seed=None for non-deterministic behavior
         generator = SyntheticStockDataGenerator(
-            initial_price=4000,  # Approximate S&P 500 level
-            random_seed=None  # CRITICAL: None = truly random for each dataset
+            initial_price=4000,  # S&P 500 level
+            random_seed=None
         )
         
-        # Generate synthetic data
         synthetic_data = generator.generate_synthetic_data(
             n_years=n_years,
             calibrate_from_historical=True,
             progress_bar=False
         )
         
-        # Convert to expected format for signal construction
+        # Create OHLCV format for signal construction
         synth_formatted = pd.DataFrame({
-            'Open': synthetic_data['price'] * (1 + np.random.normal(0, 0.001, len(synthetic_data))),  # Add small open gap
-            'High': synthetic_data['price'] * (1 + np.abs(np.random.normal(0, 0.005, len(synthetic_data)))),  # High prices
-            'Low': synthetic_data['price'] * (1 - np.abs(np.random.normal(0, 0.005, len(synthetic_data)))),   # Low prices
+            'Open': synthetic_data['price'] * (1 + np.random.normal(0, 0.001, len(synthetic_data))),
+            'High': synthetic_data['price'] * (1 + np.abs(np.random.normal(0, 0.005, len(synthetic_data)))),
+            'Low': synthetic_data['price'] * (1 - np.abs(np.random.normal(0, 0.005, len(synthetic_data)))),
             'Close': synthetic_data['price'],
-            'Volume': np.random.randint(1000000, 5000000, len(synthetic_data))  # Random volume
+            'Volume': np.random.randint(1000000, 5000000, len(synthetic_data))
         })
         
-        # Add timestamp index
         synth_formatted.index = pd.date_range(start='2020-01-01', periods=len(synth_formatted), freq='D')
-        
-        # Construct trading signals
         synth_signals = construct_signals(synth_formatted)
         
-        if len(synth_signals) > 100:  # Only add if sufficient data
+        if len(synth_signals) > 100:
             synthetic_datasets.append(synth_signals)
-            print(f"   ✅ Dataset {i+1}: {len(synth_signals)} samples")
+            print(f"Dataset {i+1}: {len(synth_signals)} samples")
         else:
-            print(f"   ❌ Dataset {i+1}: Insufficient data ({len(synth_signals)} samples)")
+            print(f"Dataset {i+1}: Insufficient data ({len(synth_signals)} samples)")
     
-    print(f"\n✅ Successfully generated {len(synthetic_datasets)} synthetic datasets")
+    print(f"\nSuccessfully generated {len(synthetic_datasets)} synthetic datasets")
     return synthetic_datasets
 
 def optimize_svm_parameters(X_train, y_train):
-    """
-    Perform grid search to find optimal SVM parameters
-    """
-    print("\n🔧 Optimizing SVM Parameters")
+    """Grid search for optimal SVM hyperparameters (C, gamma)."""
+    print("\nOptimizing SVM Parameters")
     print("-" * 35)
     
-    # Parameter grid for optimization
+    # Parameter grid
     parameters = {
         'gamma': [10, 1, 0.1, 0.01, 0.001],
         'C': [1, 10, 100, 1000, 10000]
@@ -181,18 +142,18 @@ def optimize_svm_parameters(X_train, y_train):
     best_accuracy = 0
     best_parameter = None
     
-    # Split training data for validation
+    # Validation split
     X_val_train, X_val_test, y_val_train, y_val_test = train_test_split(
-        X_train, y_train, test_size=0.2, random_state=None  # Non-deterministic validation splits
+        X_train, y_train, test_size=0.2, random_state=None
     )
     
     print(f"Testing {len(grid)} parameter combinations...")
     
     for i, p in enumerate(grid):
         if i % 5 == 0:
-            print(f"   Progress: {i+1}/{len(grid)}")
+            print(f"Progress: {i+1}/{len(grid)}")
             
-        svm = SVC(C=p['C'], gamma=p['gamma'], random_state=None)  # Non-deterministic
+        svm = SVC(C=p['C'], gamma=p['gamma'], random_state=None)
         svm.fit(X_val_train, y_val_train)
         predictions = svm.predict(X_val_test)
         accuracy = accuracy_score(y_val_test, predictions)
