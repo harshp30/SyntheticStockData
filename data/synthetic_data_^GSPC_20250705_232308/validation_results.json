@@ -1,0 +1,240 @@
+{
+  "return_distribution": {
+    "moments": {
+      "mean_diff": 0.0003884529076307578,
+      "std_diff": 0.0011397251701015434,
+      "skew_diff": 0.9252389589352387,
+      "kurt_diff": 14.46006280609139,
+      "mean_ratio": -0.09912329744082578,
+      "std_ratio": 1.114800156177598
+    },
+    "statistical_tests": {
+      "ks_statistic": 0.05014323056540265,
+      "ks_pvalue": 0.005111017497114538,
+      "distributions_similar": "False"
+    },
+    "normality_tests": {
+      "historical_normal": "False",
+      "synthetic_normal": "False",
+      "both_non_normal": "True"
+    }
+  },
+  "volatility_structure": {
+    "volatility_levels": {
+      "historical_mean_vol": 0.1348081777898344,
+      "synthetic_mean_vol": 0.1507981019546586,
+      "vol_difference": 0.0159899241648242,
+      "vol_ratio": 1.1186124197135314
+    },
+    "volatility_clustering": {
+      "historical_autocorr_mean": 0.14625024142410914,
+      "synthetic_autocorr_mean": 0.15396439416874907,
+      "clustering_similarity": 0.9922858472553601
+    },
+    "volatility_distribution": {
+      "hist_vol_std": 0.08246715151808684,
+      "synth_vol_std": 0.09168141473376887,
+      "vol_variability_ratio": 1.1117325267826321
+    }
+  },
+  "regime_characteristics": {
+    "synthetic_regime_stats": {
+      "bull_annual_return": -0.003703658845305037,
+      "bear_annual_return": -0.02315191633937586,
+      "bull_volatility": 0.10157982481536088,
+      "bear_volatility": 0.29750908585103547,
+      "regime_volatility_ratio": 2.9288206235028498
+    },
+    "historical_comparison": {
+      "bull_return_diff": 0.17998350840859928,
+      "bear_return_diff": 0.02468616509849995,
+      "bull_vol_diff": 0.06962652094105652,
+      "bear_vol_diff": 0.20082238455565948
+    }
+  },
+  "risk_metrics": {
+    "var_metrics": {
+      "hist_var_95": -0.014714463309780568,
+      "synth_var_95": -0.015781799188672802,
+      "var_95_diff": 0.0010673358788922341,
+      "hist_var_99": -0.026893211378907694,
+      "synth_var_99": -0.03195783499474103,
+      "var_99_diff": 0.0050646236158333365
+    },
+    "drawdown_metrics": {
+      "hist_max_dd": -0.5677538774277282,
+      "synth_max_dd": -0.22483905420276595,
+      "dd_diff": 0.34291482322496225
+    },
+    "performance_metrics": {
+      "hist_sharpe": 0.5651120564515839,
+      "synth_sharpe": -0.05024736509825466,
+      "sharpe_diff": 0.6153594215498386
+    }
+  },
+  "autocorrelation": {
+    "autocorrelation_comparison": {
+      "hist_autocorr_mean": -0.0028547825415008088,
+      "synth_autocorr_mean": -0.014877315883211447,
+      "autocorr_mse": 0.0024000811565540003,
+      "autocorr_mae": 0.04191833671724141,
+      "autocorr_similarity": 0.997599918843446
+    }
+  },
+  "distributional_properties": {
+    "quantile_comparison": {
+      "percentiles": [
+        1,
+        5,
+        10,
+        25,
+        50,
+        75,
+        90,
+        95,
+        99
+      ],
+      "historical_quantiles": [
+        -0.026893211378907694,
+        -0.014714463309780568,
+        -0.010050399273568367,
+        -0.004085103438139004,
+        0.00048601039392770495,
+        0.0050548086997004305,
+        0.010466807342162763,
+        0.014722898305036525,
+        0.025951745384455716
+      ],
+      "synthetic_quantiles": [
+        -0.03195783499474103,
+        -0.015781799188672802,
+        -0.010987133551228429,
+        -0.004889867397520871,
+        -1.2238844092419168e-05,
+        0.004500251283028202,
+        0.010224633300919616,
+        0.017801614569928653,
+        0.03404718673700971
+      ],
+      "quantile_differences": [
+        0.0050646236158333365,
+        0.0010673358788922341,
+        0.0009367342776600614,
+        0.0008047639593818674,
+        0.0004982492380201241,
+        0.0005545574166722286,
+        0.0002421740412431473,
+        0.0030787162648921278,
+        0.008095441352553995
+      ],
+      "mean_quantile_diff": 0.0022602884494610136
+    },
+    "tail_behavior": {
+      "hist_extreme_negative_count": "931",
+      "synth_extreme_negative_count": "63",
+      "hist_extreme_positive_count": "931",
+      "synth_extreme_positive_count": "63",
+      "extreme_event_ratio": 0.06766917293233082
+    }
+  },
+  "leverage_effect": {
+    "historical_leverage_correlation": -0.007089522733727885,
+    "synthetic_leverage_correlation": -0.006062136305057892,
+    "leverage_difference": 0.0010273864286699927,
+    "leverage_effect_present": "False"
+  },
+  "fat_tails": {
+    "historical_kurtosis": 20.138760839707697,
+    "synthetic_kurtosis": 5.678698033616308,
+    "kurtosis_difference": 14.46006280609139,
+    "both_fat_tails": "True",
+    "historical_extreme_frequency": 0.013750134278655065,
+    "synthetic_extreme_frequency": 0.020634920634920634,
+    "extreme_frequency_ratio": 1.5007068452380952,
+    "normality_rejected": {
+      "historical": "True",
+      "synthetic": "True"
+    }
+  },
+  "volatility_clustering": {
+    "arch_test": {
+      "historical_stat": 627.6848743816181,
+      "historical_pvalue": 1.1102230246251565e-16,
+      "synthetic_stat": 25.557565864488943,
+      "synthetic_pvalue": 1.1102230246251565e-16,
+      "both_clustering": "True"
+    },
+    "ljung_box_test": {
+      "historical_stat": 6864.068067227131,
+      "historical_pvalue": 0.0,
+      "synthetic_stat": 320.1364599631752,
+      "synthetic_pvalue": 0.0,
+      "both_clustering": "True"
+    }
+  },
+  "stylized_facts": {
+    "heavy_tails": {
+      "historical": "True",
+      "synthetic": "True",
+      "both_satisfied": "True"
+    },
+    "negative_skewness": {
+      "historical": "True",
+      "synthetic": "False",
+      "both_satisfied": "False"
+    },
+    "volatility_clustering": {
+      "historical": "True",
+      "synthetic": "True",
+      "both_satisfied": "True"
+    },
+    "leverage_effect": {
+      "historical": "False",
+      "synthetic": "False",
+      "both_satisfied": "False"
+    },
+    "no_return_autocorr": {
+      "historical": "False",
+      "synthetic": "False",
+      "both_satisfied": "False"
+    },
+    "overall_score": 0.4
+  },
+  "summary_statistics": {
+    "performance_comparison": {
+      "hist_annual_return": 0.0890620123792082,
+      "synth_annual_return": -0.008828120343742762,
+      "return_difference": 0.09789013272295097,
+      "hist_annual_volatility": 0.1576006233851049,
+      "synth_annual_volatility": 0.1756931995634017,
+      "volatility_difference": 0.01809257617829682,
+      "hist_sharpe": 0.5651120564515839,
+      "synth_sharpe": -0.05024736509825466,
+      "sharpe_difference": 0.6153594215498386
+    },
+    "distribution_comparison": {
+      "hist_skewness": -0.6271759622724749,
+      "synth_skewness": 0.2980629966627638,
+      "skewness_difference": 0.9252389589352387,
+      "hist_kurtosis": 20.138760839707697,
+      "synth_kurtosis": 5.678698033616308,
+      "kurtosis_difference": 14.46006280609139
+    },
+    "risk_comparison": {
+      "hist_max_drawdown": -0.5677538774277282,
+      "synth_max_drawdown": -0.22483905420276595,
+      "drawdown_difference": 0.34291482322496225
+    }
+  },
+  "overall_score": {
+    "component_scores": {
+      "return_distribution": 0.0,
+      "volatility_structure": 0.840100758351758,
+      "risk_metrics": 0.1915311636555641,
+      "regime_characteristics": 0.5,
+      "autocorrelation": 0.5
+    },
+    "overall_score": 0.3579079805018305,
+    "validation_quality": "Very Poor"
+  }
+}
